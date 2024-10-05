@@ -20,10 +20,9 @@ const ObjectId = require('mongodb').ObjectId;
 app.use(bodyPaser.json());
 
 
-//jwt
+
 const jwt = require('jsonwebtoken');
-// Secret key for signing JWT tokens
-const secretKey = 'your-secret-key';
+const {authenticateToken, secretKey} = require('./authMiddleware');
 
 
 
@@ -37,19 +36,7 @@ mongoose.connect("mongodb+srv://devzonedo:7rT2AtRR10iZzoI7@cluster0.qrgeuyp.mong
 
 
 
-// Middleware for validating bearer token
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) return res.sendStatus(401);
-
-    jwt.verify(token, secretKey, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-};
 
 
 

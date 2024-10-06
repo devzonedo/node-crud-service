@@ -5,7 +5,8 @@ const ObjectId = require('mongodb').ObjectId;
 
 const User = require('../models/user.js');
 
-
+const jwt = require('jsonwebtoken');
+const {authenticateToken, secretKey} = require('../authMiddleware');
 
 router.post("/register", async (req,res,next)=>{
     console.log("user>>register");
@@ -59,13 +60,18 @@ const { username , password } = req.body;
                 const user = await User.findOne({username , password});
 
                 if(user){
+
+
+                    const accessToken = jwt.sign(username, secretKey, { expiresIn: '1000' });
+                    
                     res.status(200).json({
                         message: "login success",
                         user: {
                             username: user.username,
                             email: user.email,
                             id:user._id
-                        }
+                        },
+                        accessToken: accessToken
                     });
 
                 }else{

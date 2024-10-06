@@ -18,6 +18,10 @@ const ObjectId = require('mongodb').ObjectId;
 app.use(bodyPaser.json());
 
 
+const jwt = require('jsonwebtoken');
+const {authenticateToken, secretKey} = require('./authMiddleware');
+
+
 mongoose.connect("mongodb+srv://devzonedo:7rT2AtRR10iZzoI7@cluster0.qrgeuyp.mongodb.net/crudappdb?retryWrites=true&w=majority&appName=Cluster0")
 .then(()=>{
     console.log("database connected successfully..");

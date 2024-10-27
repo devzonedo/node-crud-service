@@ -57,6 +57,25 @@ app.use('/api/task',tasksRoutes);
 
 
 
+app.get('/gettoken', (req,res)=>{
+    const username = req.body.username;
+    const user = { username: username };
+
+    //const accessToken = jwt.sign(user, secretKey);
+    // with expiry 
+    console.log("token:"+secretKey);
+    const accessToken = jwt.sign(user, secretKey, { expiresIn: '10000' });
+    res.json({ accessToken: accessToken });
+});
+
+
+
+//protected endpoint
+app.get('/protected',authenticateToken, (req,res)=>{
+    res.json({msg: "this is protected"});
+});
+
+
 app.get("/healthcheck",(req,res,next)=>{
     console.log(">>/healthcheck");
     res.status(200).json({

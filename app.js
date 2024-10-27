@@ -64,7 +64,7 @@ app.get('/gettoken', (req,res)=>{
     //const accessToken = jwt.sign(user, secretKey);
     // with expiry 
     console.log("token:"+secretKey);
-    const accessToken = jwt.sign(user, secretKey, { expiresIn: '10000' });
+    const accessToken = jwt.sign(user, secretKey, { expiresIn:  60 * 120  });
     res.json({ accessToken: accessToken });
 });
 

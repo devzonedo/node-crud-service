@@ -62,7 +62,7 @@ const { username , password } = req.body;
                 if(user){
 
 
-                    const accessToken = jwt.sign(username, secretKey, { expiresIn: '1000' });
+                    const accessToken = jwt.sign({name: username}, secretKey, { expiresIn: 60 * 120  });
                     
                     res.status(200).json({
                         message: "login success",

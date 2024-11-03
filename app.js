@@ -18,27 +18,33 @@ const ObjectId = require('mongodb').ObjectId;
 app.use(bodyPaser.json());
 
 
+
+const jwt = require('jsonwebtoken');
+const { authenticationToken, secretkey } = require('./authMiddleware.js');
+
+
+
 mongoose.connect("mongodb+srv://devzonedo:7rT2AtRR10iZzoI7@cluster0.qrgeuyp.mongodb.net/crudappdb?retryWrites=true&w=majority&appName=Cluster0")
-.then(()=>{
-    console.log("database connected successfully..");
-})
-.catch(()=>{
-    console.log("error in database connection");
-});
+    .then(() => {
+        console.log("database connected successfully..");
+    })
+    .catch(() => {
+        console.log("error in database connection");
+    });
 
 
 
 
-app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With , Content-Type , Accept");
-    res.setHeader("Access-Control-Allow-Methods","GET, POST, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
     next();
 });
 
 
 
-app.use((req,res,next) => {
+app.use((req, res, next) => {
     console.log('this is from express');
     next();
 });
@@ -47,13 +53,37 @@ app.use((req,res,next) => {
 
 
 // access custom routes 
-app.use('/api/post',postsRoutes);
-app.use('/api/user',usersRoutes);
-app.use('/api/task',tasksRoutes);
+app.use('/api/post', postsRoutes);
+app.use('/api/user', usersRoutes);
+app.use('/api/task', tasksRoutes);
 
 
 
-app.get("/healthcheck",(req,res,next)=>{
+app.get('/gettoken', (req, res) => {
+    const username = req.body.username;
+    const user = { username: username };
+
+    console.log('mysecret:' + secretkey);
+    const accessToken = jwt.sign(user, secretkey, { expiresIn: 60 * 120 });
+    console.log('accessToken:' + accessToken);
+
+    res.json({
+        accessToken: accessToken
+    });
+
+});
+
+
+
+app.get('/protected', authenticationToken , (req, res) => {
+    console.log('protected->');
+    res.json({ msg: "this is protected" });
+});
+
+
+
+
+app.get("/healthcheck", (req, res, next) => {
     console.log(">>/healthcheck");
     res.status(200).json({
         message: "server running ...... "

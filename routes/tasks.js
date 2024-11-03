@@ -6,6 +6,8 @@ const ObjectId = require('mongodb').ObjectId;
 
 const { CategoryModel, TaskModel , getTasksWithCategory } = require('../models/task.js');
 
+const jwt = require('jsonwebtoken');
+const {authenticateToken, secretKey} = require('../authMiddleware');
 
 // create categories 
 router.post("/category", (req,res,next)=>{
@@ -57,7 +59,7 @@ router.post("/add", (req,res,next)=>{
 
 
 
-router.get("/list", (req,res,next)=>{
+router.get("/list", authenticateToken, (req,res,next)=>{
     console.log('tasks>>list');
 
 

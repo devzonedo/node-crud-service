@@ -58,11 +58,11 @@ const { username , password } = req.body;
 
 
                 const user = await User.findOne({username , password});
-
+                console.log(user);
                 if(user){
 
 
-                    const accessToken = jwt.sign({name: username}, secretKey, { expiresIn: 60 * 120  });
+                    const accessToken = jwt.sign({userdata:user}, secretKey, { expiresIn:  60 * 120  });
                     
                     res.status(200).json({
                         message: "login success",
